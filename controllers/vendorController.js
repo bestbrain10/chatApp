@@ -5,7 +5,10 @@ const {Vendor} = require('../models');
 module.exports = class vendorController{
     static login(req, res, next){
         Vendor.login({email : req.body.email, password: req.body.password})
-        .then(user => res.json(user), err => res.status(400).json(null))
+        .then(user => res.json(user), err => {
+            console.log(err);
+            res.status(400).json(null)
+        })
         .catch(next)
     }
 
@@ -13,7 +16,7 @@ module.exports = class vendorController{
         Vendor.register(req.body)
         .then(vendor => {
             res.json(vendor)
-        }, next)
+        }, err => res.status(400).json(null))
         .catch(next)
     }
 

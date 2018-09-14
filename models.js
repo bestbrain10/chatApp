@@ -38,7 +38,7 @@ class userClass {
             this.findOne({email})
             .select('+password')
             .then(user => {
-                if(!user) return reject(user);
+                if(!user || (user && !user.comparePassword(password))) return reject(user);
                 delete user.password;
                 return resolve(Object.assign(user._doc, {token : jwt.sign({user : user._id}, secret)}));
             }, reject)
@@ -60,17 +60,15 @@ class userClass {
     }
 
     comparePassword(password){
-        let isTrue =  bcrypt.compareSync(this.password, password)
-        console(isTrue, this.password, password);
-        return isTrue
+        return bcrypt.compareSync(password, this.password)
     }
 }
 
 const customerSchema = new Schema({
-    fullname : String, 
-    email : {type: String, unique: true},
+    fullname : {type: String, required: true}, 
+    email : {type: String, unique: true, required : true},
     password: {type: String, select : false},
-    picture: String,
+    picture: {type: String, required: true},
     timestamp : {type: Date, 'default' : Date.now}
 })
 customerSchema.pre('save', passwordPreSave);
@@ -80,10 +78,10 @@ customerSchema.loadClass(userClass)
 exports.Customer = mongoose.model('Customer', customerSchema);
 
 const vendorSchema = new Schema({
-    fullname : String, 
-    email : {type: String, unique: true},
+    fullname : {type: String, required: true}, 
+    email : {type: String, unique: true, required : true},
     password: {type: String, select : false},
-    picture: String,
+    picture: {type: String, required: true},
     timestamp : {type: Date, 'default' : Date.now}
 })
 
