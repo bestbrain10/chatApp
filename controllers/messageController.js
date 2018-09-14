@@ -3,7 +3,7 @@ const {Message} = require('../models');
 
 
 module.exports = class messageController{
-    static get(req, res){
+    static get(req, res, next){
         Message.find({session : req.params.session})
         .then(messages => {
             res.json(messages)
@@ -11,15 +11,15 @@ module.exports = class messageController{
         .catch(next)
     }
 
-    static init(req, res){
-        Message.create(req.body)
+    static init(req, res, next){
+        Message.create({})
         .then(message => {
             res.json(message)
         }, next)
         .catch(next)
     }
 
-    static create(req, res){
+    static create(req, res, next){
         Message.update({
             session : req.params.session
         },{

@@ -42,9 +42,8 @@ describe('/vendor Endpoints', function(){
             res.should.have.status(200);
             res.body.should.be.an('object');
             res.body.should.have.property('token');
-            expect(res.body.token).be.lengthOf(151)
-
-
+            res.body.password.should.notEqual(user.password, )
+            res.body.token.should.be.length(151)
             done();
         })
     })
@@ -55,7 +54,7 @@ describe('/vendor Endpoints', function(){
         .send({})
         .end((err, res) => {
             res.should.have.status(400);
-            expect(res.body).to.be.null
+            res.body.should.be.null;
             done()
         })
     })
@@ -71,7 +70,7 @@ describe('/vendor Endpoints', function(){
             res.should.have.status(200);
             res.body.should.be.an('object');
             res.body.should.have.property('token');
-            expect(res.body.token).be.lengthOf(151)
+            res.body.token.should.be.length(151)
             done()
         })
     })
@@ -85,7 +84,7 @@ describe('/vendor Endpoints', function(){
         })
         .end((err, res) => {
             res.should.have.status(400);
-            expect(res.body).to.be.null
+            res.body.token.should.be.null
             done()
         })
     })
@@ -99,7 +98,7 @@ describe('/vendor Endpoints', function(){
         })
         .end((err, res) => {
             res.should.have.status(400);
-            expect(res.body).to.be.null
+            res.body.token.should.be.null
             done()
         })
     })
@@ -109,7 +108,7 @@ describe('/vendor Endpoints', function(){
         .get('/vendor')
         .end((err, res) => {
             res.should.have.status(200);
-            expect(res.body).to.be.a('array');
+            res.body.token.should.be.null;
             done()
         })
     })

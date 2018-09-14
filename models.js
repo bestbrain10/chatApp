@@ -23,7 +23,7 @@ const idPreSave = function(next){
     if(this.isNew){
         crypto.randomBytes(64, (err, buf) => {
            if(err) return next(err)
-            return resolve(buf.toString('hex'));
+            return this.id = buf.toString('hex');
             next();
         });
 
