@@ -15,6 +15,7 @@ const server = require('http').Server(app);
 app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}));
+app.use('/uploads', express.static('uploads'))
 app.get('/sw.js', (req, res) =>{
     res.header('content-type', 'text/javascript');
     res.sendFile('./sw.js');

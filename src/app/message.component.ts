@@ -1,32 +1,38 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {Message} from './message.model'
 import {MessageService} from './message.service';
+import { UserService} from './user.service'
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import {SocketService} from './socket.service'
 
 @Component({
   selector: 'app-message',
   template: `
-  <div class="row">
-  <div class="col s12 m6 offset-m3">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">{{message.user}}</span>
-        <p>{{message.message}}</p>
-      </div>
-    </div>
-  </div>
-</div>
+  <ul class="collection with-header">
+  <li class="collection-header">
+  
+  </li>
+  <li class="collection-item"><div>
+    <h4>Livinus Igbaji</h4>
+    <p>Lorem Ipsum Dolor sit Amet</p>
+    <small>1 sec ago</small>
+  </div></li>
+  </ul>
   `,
 })
-export class MessageComponent {
-  @Input() message: Message;
+export class MessageComponent implements OnInit{
+  messages = [];
 
-  constructor(private service: MessageService) { }
+  constructor(
+    private messageService: MessageService, 
+    private userService: UserService, 
+    private route: ActivatedRoute,
+    private socket: SocketService,
+    private router: Router) { }
 
-  delete(){
-    this.service.delete(this.message)
-  }
 
-  update(){
-    this.service.update(1, this.message)
+
+  ngOnInit() {
+    
   }
 }

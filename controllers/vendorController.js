@@ -4,7 +4,7 @@ const {Vendor} = require('../models');
 
 module.exports = class vendorController{
     static login(req, res, next){
-        Vendor.login({email : req.body.email, password: req.body.password})
+        Vendor.login(req.body)
         .then(user => res.json(user), err => {
             console.log(err);
             res.status(400).json(null)
@@ -13,7 +13,7 @@ module.exports = class vendorController{
     }
 
     static register(req, res, next){
-        Vendor.register(req.body)
+        Vendor.register(Object.assign(req.body, req.file && {picture : req.file.filename}))
         .then(vendor => {
             res.json(vendor)
         }, err => res.status(400).json(null))

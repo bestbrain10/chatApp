@@ -7,7 +7,7 @@ const handle = (...x) => {
 
 
 module.exports = (server) => {
-    const io = socketio(server)
+    const io = socket(server)
 
     io.on('connection', function (client) {
         client.on('register', handle)//tag information upon resitration

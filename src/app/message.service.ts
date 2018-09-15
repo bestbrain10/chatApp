@@ -17,12 +17,24 @@ export class MessageService {
     return this.http.post(this.api(), message)
   }
 
-  delete(message){
-    return this.http.delete(this.api(message))
+  init(reciever){
+    return new Promise((reject, resolve) => {
+      let item = sessionStorage.getItem(reciever);
+      if(item){
+        resolve(JSON.parse(item))
+      }else{
+        fetch(this.api('/message'),{method : 'POST'})
+        .then(res => res.json())
+        .then(session => {
+          sessionStorage.setItem(reciever, JSON.stringify(session))
+        }, reject)
+        .catch(reject)
+      }
+    })
   }
 
-  update(message, body){
-    return this.http.put(this.api(message), body)
+  destroy(receiver){
+    return sessionStorage.removeItem(receiver);
   }
 
 

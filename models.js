@@ -48,14 +48,20 @@ class userClass {
     }
 
     static register(signup){
+        console.log({signup})
         return new Promise((resolve, reject) => {
             this.create(signup)
             .then(user => {
-                if(!user) return reject(user);
                 delete user.password;
                 return resolve(Object.assign(user._doc, {token : jwt.sign({user : user._id}, secret)}));
-            }, reject)
-            .catch(reject)  
+            }, err => {
+                console.log(err)
+                reject(err)
+            })
+            .catch(err => {
+                console.log(err)
+                return reject(err)
+            })  
         })
     }
 

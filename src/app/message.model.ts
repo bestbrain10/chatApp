@@ -1,5 +1,8 @@
 export interface Message {
-    key : Number;
-    user: string;
-    message: string;
+    sender : String;
+    sender_id : String;
+    recipient : String;
+    recipient_id : String;
+    info: string;
+    timestamp? : String;
 }

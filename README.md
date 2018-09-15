@@ -16,7 +16,8 @@ to run the backend server run `node index.js`
  - *POST* /vendor
     creates a new vendor in the database
 
-    *body* ```js
+    *body* 
+    ```js
     {
         fullname : String, required,
         password : String, required,
@@ -26,7 +27,8 @@ to run the backend server run `node index.js`
 
 - *POST* /vendor/login
     logs in a vendor to the app
-    *body* ```js
+    *body* 
+    ```js
     {
         password : String, required,
         email : String, email, required        
@@ -41,7 +43,8 @@ to run the backend server run `node index.js`
  - *POST* /customer
     creates a new customer in the database
 
-    *body* ```js
+    *body* 
+    ```js
     {
         fullname : String, required,
         password : String, required,
@@ -51,7 +54,8 @@ to run the backend server run `node index.js`
 
 - *POST* /customer/login
     logs in a customer to the app
-    *body* ```js
+    *body* 
+    ```js
     {
         password : String, required,
         email : String, email, required        
@@ -70,7 +74,8 @@ uses JWT to differentiate between visitor and user. if no JWT is present, a visi
 
  - *POST* /message/:session
     append message to messages under a message session
-    *body* ```js
+    *body* 
+    ```js
     {
         sender : String, required,
         sender_id : String, required,

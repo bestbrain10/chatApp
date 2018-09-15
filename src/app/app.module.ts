@@ -5,7 +5,21 @@ import { AppComponent } from './app.component';
 import { MessageComponent } from './message.component'
 import { LoginComponent } from './login.component'
 import { RegisterComponent } from './register.component'
-import { FormsModule }   from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms'
+import { RouterModule, Routes } from '@angular/router';
+import { UsersComponent } from './users.component';
+
+
+const appRoutes: Routes = [
+  { path: '', component: LoginComponent },
+  { path: 'register',  component: RegisterComponent },
+  { path: 'users', component: UsersComponent},
+  { path: 'messages/:session', component : MessageComponent},
+  { path: 'login',
+    redirectTo: '',
+    pathMatch: 'full'
+  },
+];
 
 
 @NgModule({
@@ -13,12 +27,18 @@ import { FormsModule }   from '@angular/forms';
     AppComponent,
     MessageComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
   ],
   providers: [
 
