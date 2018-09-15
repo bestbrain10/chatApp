@@ -10,7 +10,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
       <li class="collection-item avatar" *ngFor="let user of users">
         <img [src]="user.picture" [alt]="user.fullname" class="circle">
         <span class="title">{{user.fullname}}</span>
-        <a href="#!" class="secondary-content" (click)="startChat(user)"><i class="material-icons">send</i></a>
+        <a style="cursor: pointer" class="secondary-content" (click)="startChat(user)"><i class="material-icons">send</i></a>
       </li>
     </ul>
   `,
@@ -28,9 +28,10 @@ export class UsersComponent  {//implements OnInit{
   
 
   startChat(user){
-      this.messageService.init(user.id || user._id)
-      .then((session: any) => {
-        this.router.navigate(['/message', session.id])
+      this.messageService.init(user)
+      .then(({session, receiver}) => {
+        console.log(`/messages/${session.id}`);
+        this.router.navigate(['/messages', session.id]);
       })
       .catch(console.log)
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import swal from 'sweetalert'
+import { Socket } from 'ng-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class UserService {
     }).then(res => res.json())
     .then(data => {
       if(data){
-        sessionStorage.setItem('session', JSON.stringify(data))
+        sessionStorage.setItem('session', JSON.stringify({asA, ...data}))
         return Promise.resolve(data)
       }else{
         swal({
@@ -48,16 +49,16 @@ export class UserService {
       method : 'POST',
       body : data
     }).then(res => res.json())
-    .then(data => {
-      if(data){
-        sessionStorage.setItem('session', JSON.stringify(data))
-        return Promise.resolve(data)
+    .then(response => {
+      if(response){
+        sessionStorage.setItem('session', JSON.stringify({asA : data.get('asA'), ...response}))
+        return Promise.resolve(response)
       }else{
         swal({
           icon : 'error',
           text : 'Please use correct details'
         })
-        return Promise.reject(data)
+        return Promise.reject(response)
       }
     }, err => {
       swal({

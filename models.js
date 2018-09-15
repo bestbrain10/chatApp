@@ -74,7 +74,7 @@ const customerSchema = new Schema({
     fullname : {type: String, required: true}, 
     email : {type: String, unique: true, required : true},
     password: {type: String, select : false},
-    socketId : String,
+    socket : [String],
     picture: {type: String},
     timestamp : {type: Date, 'default' : Date.now}
 })
@@ -88,7 +88,7 @@ const vendorSchema = new Schema({
     fullname : {type: String, required: true}, 
     email : {type: String, unique: true, required : true},
     password: {type: String, select : false},
-    socketId : String,
+    socket : [String],
     picture: {type: String},
     timestamp : {type: Date, 'default' : Date.now}
 })
@@ -100,6 +100,7 @@ exports.Vendor = mongoose.model('Vendor', vendorSchema);
 
 const visitorSchema = new Schema({
     id : String,
+    socket : [String],
     timestamp : {type: Date, 'default' : Date.now}
 })
 

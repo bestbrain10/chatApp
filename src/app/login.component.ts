@@ -8,7 +8,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 @Component({
   selector: 'app-login',
   template: `
-    <form class="card" (ngSubmit)="login(f)" #f="ngForm">
+    <form class="card" (ngSubmit)="login(f, i)" #f="ngForm" #i>
       <div class="card-content">
         <div class="row">
             <div class="input-field col s12">
@@ -52,21 +52,28 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 export class LoginComponent {
 
   constructor(private route: ActivatedRoute,
-    private router: Router, private userService: UserService) { }
+    private router: Router, private userService: UserService) { 
+      if(this.userService.session()){
+        this.router.navigate(['/users'])
+      }
+    }
 
-  login(f: NgForm){
-
+  login(f: NgForm, i){
+    i.querySelector('button').disabled = true;
     this.userService.login(f.value)
     .then(user => {
-      console.log(user)
+      i.querySelector('button').disabled = false;
       this.router.navigate(['/users'])
+    }, () => {
+      i.querySelector('button').disabled = false;
     })
-
   }
 
   visitorLogin(){
     this.userService.login({asA : 'visitor'})
-    .then(console.log, console.log)
+    .then(() => {
+      this.router.navigate(['/users'])
+    })
     .catch(console.log)
 
   }

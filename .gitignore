@@ -17,7 +17,8 @@
 .settings/
 *.sublime-workspace
 
-uploads/
+uploads/*
+!uploads/.gitkeep
 
 # IDE - VSCode
 .vscode/*

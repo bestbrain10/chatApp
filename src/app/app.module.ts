@@ -8,13 +8,15 @@ import { RegisterComponent } from './register.component'
 import { FormsModule, ReactiveFormsModule} from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router';
 import { UsersComponent } from './users.component';
+import { AlwaysAuthGuard } from './login.guard';
+import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register',  component: RegisterComponent },
-  { path: 'users', component: UsersComponent},
-  { path: 'messages/:session', component : MessageComponent},
+  { path: 'users', canActivate : [AlwaysAuthGuard], component: UsersComponent},
+  { path: 'messages/:session',  component : MessageComponent},
   { path: 'login',
     redirectTo: '',
     pathMatch: 'full'
@@ -35,13 +37,14 @@ const appRoutes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    SocketIoModule.forRoot({ url: 'http://localhost:8988', options: {} }),
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
   providers: [
-
+    AlwaysAuthGuard
   ],
   bootstrap: [AppComponent]
 })
