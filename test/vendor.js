@@ -42,7 +42,7 @@ describe('/vendor Endpoints', function(){
             res.should.have.status(200);
             res.body.should.be.an('object');
             res.body.should.have.property('token');
-            res.body.password.should.notEqual(user.password, )
+            expect(res.body.password).not.equal(user.password)
             res.body.token.should.be.length(151)
             done();
         })
@@ -54,7 +54,7 @@ describe('/vendor Endpoints', function(){
         .send({})
         .end((err, res) => {
             res.should.have.status(400);
-            res.body.should.be.null;
+            expect(res.body).to.be.null;
             done()
         })
     })
@@ -84,7 +84,7 @@ describe('/vendor Endpoints', function(){
         })
         .end((err, res) => {
             res.should.have.status(400);
-            res.body.token.should.be.null
+            expect(res.body).to.be.null;
             done()
         })
     })
@@ -98,7 +98,7 @@ describe('/vendor Endpoints', function(){
         })
         .end((err, res) => {
             res.should.have.status(400);
-            res.body.token.should.be.null
+            expect(res.body).to.be.null;
             done()
         })
     })
@@ -108,7 +108,7 @@ describe('/vendor Endpoints', function(){
         .get('/vendor')
         .end((err, res) => {
             res.should.have.status(200);
-            res.body.token.should.be.null;
+            res.body.should.be.an('array');
             done()
         })
     })

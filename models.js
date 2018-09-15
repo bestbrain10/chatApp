@@ -21,9 +21,9 @@ const passwordPreSave = function(next){
 
 const idPreSave = function(next){
     if(this.isNew){
-        crypto.randomBytes(64, (err, buf) => {
+        crypto.randomBytes(32, (err, buf) => {
            if(err) return next(err)
-            return this.id = buf.toString('hex');
+            this.id = buf.toString('hex');
             next();
         });
 
@@ -68,7 +68,8 @@ const customerSchema = new Schema({
     fullname : {type: String, required: true}, 
     email : {type: String, unique: true, required : true},
     password: {type: String, select : false},
-    picture: {type: String, required: true},
+    socketId : String,
+    picture: {type: String},
     timestamp : {type: Date, 'default' : Date.now}
 })
 customerSchema.pre('save', passwordPreSave);
@@ -81,7 +82,8 @@ const vendorSchema = new Schema({
     fullname : {type: String, required: true}, 
     email : {type: String, unique: true, required : true},
     password: {type: String, select : false},
-    picture: {type: String, required: true},
+    socketId : String,
+    picture: {type: String},
     timestamp : {type: Date, 'default' : Date.now}
 })
 

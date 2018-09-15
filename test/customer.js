@@ -3,7 +3,7 @@ let chaiHttp = require('chai-http');
 let server = require('../index');
 let should = chai.should();
 let expect = chai.expect;
-let { Customer }= require('../models');
+let {Customer} = require('../models');
 chai.use(chaiHttp);
 
 let user = {
@@ -42,7 +42,8 @@ describe('/customer Endpoints', function(){
             res.should.have.status(200);
             res.body.should.be.an('object');
             res.body.should.have.property('token');
-            expect(res.body.token).be.lengthOf(151)
+            expect(res.body.password).not.equal(user.password)
+            res.body.token.should.be.length(151)
             done();
         })
     })
@@ -53,7 +54,7 @@ describe('/customer Endpoints', function(){
         .send({})
         .end((err, res) => {
             res.should.have.status(400);
-            expect(res.body).to.be.null
+            expect(res.body).to.be.null;
             done()
         })
     })
@@ -69,7 +70,7 @@ describe('/customer Endpoints', function(){
             res.should.have.status(200);
             res.body.should.be.an('object');
             res.body.should.have.property('token');
-            expect(res.body.token).be.lengthOf(151)
+            res.body.token.should.be.length(151)
             done()
         })
     })
@@ -83,7 +84,7 @@ describe('/customer Endpoints', function(){
         })
         .end((err, res) => {
             res.should.have.status(400);
-            expect(res.body).to.be.null
+            expect(res.body).to.be.null;
             done()
         })
     })
@@ -97,17 +98,7 @@ describe('/customer Endpoints', function(){
         })
         .end((err, res) => {
             res.should.have.status(400);
-            expect(res.body).to.be.null
-            done()
-        })
-    })
-
-    it('GET /customer should list all customers ', (done)=>{
-        chai.request(server)
-        .get('/customer')
-        .end((err, res) => {
-            res.should.have.status(200);
-            expect(res.body).to.be.a('array');
+            expect(res.body).to.be.null;
             done()
         })
     })

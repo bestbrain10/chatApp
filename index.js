@@ -8,6 +8,9 @@ const message = require('./routes/message');
 const vendor = require('./routes/vendor')
 const customer = require('./routes/customer')
 const cors = require('cors');
+const visitorController = require('./controllers/visitorController');
+
+const server = require('http').Server(app);
 
 app.use(cors());
 app.use(bodyParser.json())
@@ -20,13 +23,17 @@ app.get('/sw.js', (req, res) =>{
 app.use('/vendor', vendor);
 app.use('/message', message);
 app.use('/customer', customer);
+app.post('/visitor/login', visitorController.login)
+
 
 app.use('/**', (err, req, res, next) => {
     //last defender of errors
-    res.json(err.toString());
+    res.status(500).json(err.toString());
 })
    
-app.listen(port, () => {
+require('./socket')(server)
+
+server.listen(port, () => {
     console.log(`chat app is running on port ${port}`);
 })
 
