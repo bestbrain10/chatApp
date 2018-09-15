@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-
+import { UserService} from './user.service'
 
 @Component({
   selector: 'app-register',
@@ -44,7 +44,11 @@ import { Component, Input } from '@angular/core';
 export class RegisterComponent {
   
 
-  constructor() { }
+  constructor(private userService: UserService) { }
+
+  register(){
+    
+  }
 
   
 }

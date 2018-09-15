@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { MessageComponent } from './message.component'
 import { LoginComponent } from './login.component'
 import { RegisterComponent } from './register.component'
+import { FormsModule }   from '@angular/forms';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { RegisterComponent } from './register.component'
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
 
