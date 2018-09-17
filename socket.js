@@ -20,14 +20,16 @@ module.exports = (server) => {
 
     io.on('connection', function (client) {
 
-        client.on('join', (asA, id) => {
+        client.on('join', ({asA, id, _id}) => {
+            asA = asA.charAt(0).toUpperCase() + asA.slice(1);
+            console.log({asA, id, _id})
             Model[asA].update({
                 $or : [
                     {id},
-                    {_id : id}
+                    {_id}
                 ]
             },{
-                $push : {socket : client.id}
+                $addToSet : {socket : client.id}
             })
         })
 
@@ -35,8 +37,11 @@ module.exports = (server) => {
 
 
         client.on('message', ({info, recipient, recipient_id, session, sender, sender_id}) => {
-            Model.Message.findOneAndUpdate({session},{$push : {messages : {info, recipient, recipient_id, sender, sender_id}}})
+            console.log('got a message ', {info, recipient, recipient_id, session, sender, sender_id})
+            Model.Message.updateOne({id : session},{$push : {messages : {info, recipient, recipient_id, sender, sender_id}}})
+            .then(() => Model.Message.findOne({id : session}).populate([{path : 'messages.sender_id'},{path : 'messages.recipient_id'}]))
             .then(session => {
+                console.log({session})
                 io.emit('messages', session)
             })
             .catch(() => {
@@ -58,7 +63,7 @@ module.exports = (server) => {
             detachSocket(client)
             .then(data => {
                 console.log('received error from client:', client.id)
-            console.log(err)
+                console.log(err)
             })
         })
     })

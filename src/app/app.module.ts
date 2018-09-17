@@ -37,10 +37,10 @@ const appRoutes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule.forRoot({ url: 'http://localhost:8988', options: {} }),
+    SocketIoModule.forRoot({ url: 'http://localhost:4000', options: {} }),
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
+      { enableTracing: false } 
     )
   ],
   providers: [

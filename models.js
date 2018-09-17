@@ -111,9 +111,9 @@ const messageSchema = new Schema({
     id : String,
     messages : [{
         sender : {type: String, enum: ['vendor','customer','visitor']},
-        senderId : {type: String},
+        sender_id : {type: String, refPath : 'messages.sender'},
         recipient : {type: String, enum: ['vendor','customer','visitor']},
-        recipientId : {type: String},
+        recipient_id : {type: String, refPath: 'messages.recipient'},
         info : {type: String},
         timestamp : {type: Date, 'default' : Date.now}
     }],

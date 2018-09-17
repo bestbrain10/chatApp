@@ -30,8 +30,7 @@ export class UsersComponent  {//implements OnInit{
   startChat(user){
       this.messageService.init(user)
       .then(({session, receiver}) => {
-        console.log(`/messages/${session.id}`);
-        this.router.navigate(['/messages', session.id]);
+        this.router.navigate(['/messages', user.id || user._id]);
       })
       .catch(console.log)
 

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import swal from 'sweetalert'
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/operator/map'; 
 import { Socket } from 'ng-socket-io';
 
 @Injectable({
@@ -9,33 +11,38 @@ export class UserService {
 
   api =  (endpoint: String = '') => `http://localhost:4000/${endpoint}`;  
 
-  constructor() { }
+  constructor(private socket: Socket) { }
 
 
-  login({email = '', password = '', asA}){
-    
-    return fetch(this.api(`${asA}/login`), {
-      method : 'POST',
-      body : JSON.stringify({email, password}),
-      headers : {
-        'content-type' : 'application/json'
-      }
-    }).then(res => res.json())
-    .then(data => {
-      if(data){
-        sessionStorage.setItem('session', JSON.stringify({asA, ...data}))
-        return Promise.resolve(data)
-      }else{
+  login({email = '', password = '', asA}){    
+    return new Promise((resolve, reject) => {
+      fetch(this.api(`${asA}/login`), {
+        method : 'POST',
+        body : JSON.stringify({email, password}),
+        headers : {
+          'content-type' : 'application/json'
+        }
+      }).then(res => res.json())
+      .then(data => {
+        if(data){
+          let setData = {asA, ...data};
+          sessionStorage.setItem('session', JSON.stringify(setData))
+          this.socket.emit('join', setData, () => {
+            
+          })
+          return resolve(setData)
+        }else{
+          swal({
+            icon : 'error',
+            text : 'Wrong email or password'
+          })
+          return reject(data)
+        }
+      }, err => {
         swal({
           icon : 'error',
-          text : 'Wrong email or password'
+          text : err.toString()
         })
-        return Promise.reject(data)
-      }
-    }, err => {
-      swal({
-        icon : 'error',
-        text : err.toString()
       })
     })
   }
@@ -52,7 +59,8 @@ export class UserService {
     .then(response => {
       if(response){
         sessionStorage.setItem('session', JSON.stringify({asA : data.get('asA'), ...response}))
-        return Promise.resolve(response)
+        this.socket.emit('join', {asA : data.get('asA'), ...response})
+        return Promise.resolve({asA : data.get('asA'), ...response})
       }else{
         swal({
           icon : 'error',
@@ -70,6 +78,13 @@ export class UserService {
 
   fetch(){
     return fetch(this.api('vendor')).then(res => res.json())
+  }
+
+  init(){
+    let data = this.session()
+    if(data){
+      this.socket.emit('join', data)
+    }
   }
 
   prep(user){

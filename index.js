@@ -10,9 +10,10 @@ const customer = require('./routes/customer')
 const cors = require('cors');
 const visitorController = require('./controllers/visitorController');
 
+app.use(cors());
 const server = require('http').Server(app);
 
-app.use(cors());
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}));
 app.use('/uploads', express.static('uploads'))

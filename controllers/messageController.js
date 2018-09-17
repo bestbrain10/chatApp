@@ -4,7 +4,8 @@ const {Message} = require('../models');
 
 module.exports = class messageController{
     static get(req, res, next){
-        Message.find({session : req.params.session})
+        Message.find({id : req.params.session})
+        .populate([{path : 'messages.sender_id'},{path : 'messages.recipient_id'}])
         .then(messages => {
             res.json(messages)
         }, next)
@@ -21,7 +22,7 @@ module.exports = class messageController{
 
     static create(req, res, next){
         Message.update({
-            session : req.params.session
+            id : req.params.session
         },{
             $push : {messages : req.body}
         })
