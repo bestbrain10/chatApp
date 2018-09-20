@@ -10,7 +10,9 @@
 
 ### Running the project
 
-`ng serve`
+- `npm install`
+
+- `ng serve`
  
 Goto `http://localhost:4200/` on your browser
 
@@ -25,9 +27,13 @@ Goto `http://localhost:4200/` on your browser
 
 ### Running the project
 
-to run the backend server run `node index.js`
+- start a mongodb instance
 
-### Endpoints 
+- `npm install`
+
+- `node index.js`
+
+### API Endpoints 
 
 #### vendor
 
