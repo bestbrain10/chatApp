@@ -82,13 +82,15 @@ export class MessageComponent {//implements OnInit, OnDestroy{
     //lookup user,
     let message = Object.assign(f.value, {recipient_id : this.recipient_id, session : this.session, recipient : this.recipient});
     let session = this.userService.session()
-    this.messageService.create(message)
-    this.messages =[Object.assign(message,{
-      sender : session.asA,
-      sender_id : session,
-      timestamp : Date.now()
-    }), ...this.messages];  
-    f.reset();
+    if(message.info.trim().length){
+      this.messageService.create(message)
+      this.messages =[Object.assign(message,{
+        sender : session.asA,
+        sender_id : session,
+        timestamp : Date.now()
+      }), ...this.messages];  
+      f.reset();
+    }
   }
 
   closeSession(){

@@ -18,6 +18,9 @@ export class MessageService {
   }
 
   getMessage(){
+    this.socket.on('messages', function(messages) {
+      console.log({messages})
+    }.bind(this))
     return this.socket
   }
 
