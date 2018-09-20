@@ -10,13 +10,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { UsersComponent } from './users.component';
 import { AlwaysAuthGuard } from './login.guard';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+import {TimeAgoPipe} from 'time-ago-pipe';
 
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register',  component: RegisterComponent },
   { path: 'users', canActivate : [AlwaysAuthGuard], component: UsersComponent},
-  { path: 'messages/:session',  component : MessageComponent},
+  { path: 'messages/:type/:user',  component : MessageComponent},
   { path: 'login',
     redirectTo: '',
     pathMatch: 'full'
@@ -30,7 +31,8 @@ const appRoutes: Routes = [
     MessageComponent,
     LoginComponent,
     RegisterComponent,
-    UsersComponent
+    UsersComponent,
+    TimeAgoPipe
   ],
   imports: [
     BrowserModule,

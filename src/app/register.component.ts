@@ -79,7 +79,7 @@ export class RegisterComponent {
   preview(input, image){
     if (input.files && input.files[0] && input.files[0].type.includes('image')) {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function(e: any) {
         image.src  = e.target.result;
       }
       reader.readAsDataURL(input.files[0]);

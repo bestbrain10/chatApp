@@ -19,40 +19,32 @@ export class MessageService {
 
   getMessage(session){
     return this.socket
-            .fromEvent<any>("message")
-            .pipe(filter(data => data.session == session))
-            .pipe(map(data => data.messages));
+            .fromEvent<any>("messages")
+            //.pipe(filter(data => data.id == session))
+            //.pipe(map(data => data.messages));
   }
 
   create({info, recipient, recipient_id, session}){
-    let {asA: sender, _id: sender_id} = this.userService.session();
+    let {asA : sender, _id: sender_id } = this.userService.session()
     console.log({info, recipient, recipient_id, session, sender, sender_id});
     return this.socket.emit('message', {info, recipient, recipient_id, session, sender, sender_id})
   }
 
-  send({info, recipient, recipient_id, session}){
-    let {asA: sender, _id: sender_id} = this.userService.session();
-    return fetch(this.api('message'), {
-      method : 'POST', 
-      body : JSON.stringify({info, recipient, recipient_id, session, sender, sender_id}),
-      headers : {
-        'content-type' : 'application/json'
-      }
-    }).then(res => res.json())
-  }
-
-  init(reciever){
+  
+  
+  init(asA, reciever){
     return new Promise((resolve, reject) => {
-      let id = reciever.id || reciever._id || reciever;
-      let item = sessionStorage.getItem(id);
+      let item = sessionStorage.getItem(reciever);
       if(item){
         return resolve(JSON.parse(item))
       }else{
-        fetch(this.api('message'),{method : 'POST'})
+        fetch(this.api('message'),{method : 'POST',
+        body : JSON.stringify({asA, reciever}),
+        headers : {'content-type' : 'application/json'}})
         .then(res => res.json())
-        .then(session => {
-          let data = {session, receiver : {asA : 'Vendor', ...reciever}};
-          sessionStorage.setItem(id, JSON.stringify(data))
+        .then(([session, recipient]) => {
+          let data = {session, receiver : {asA, ...recipient}};
+          sessionStorage.setItem(reciever, JSON.stringify(data))
           return resolve(data);
         }, reject)
         .catch(reject)
@@ -60,6 +52,13 @@ export class MessageService {
     })
   }
 
+  checkReciever(user){
+    if(this.userService.session().asA.toLowerCase() == 'vendor' ){
+      return user.id ? 'Visitor' : 'Customer';
+    }else{
+      return 'Vendor';
+    }
+  }
 
 
   destroy(receiver){

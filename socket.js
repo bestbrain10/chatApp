@@ -15,14 +15,17 @@ function detachSocket(client){
 }
 
 
+function capitalize(word){
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
 module.exports = (server) => {
     const io = socket(server)
 
     io.on('connection', function (client) {
 
         client.on('join', ({asA, id, _id}) => {
-            asA = asA.charAt(0).toUpperCase() + asA.slice(1);
-            console.log({asA, id, _id})
+            asA = capitalize(asA)
             Model[asA].update({
                 $or : [
                     {id},
@@ -38,11 +41,11 @@ module.exports = (server) => {
 
         client.on('message', ({info, recipient, recipient_id, session, sender, sender_id}) => {
             console.log('got a message ', {info, recipient, recipient_id, session, sender, sender_id})
-            Model.Message.updateOne({id : session},{$push : {messages : {info, recipient, recipient_id, sender, sender_id}}})
+            Model.Message.updateOne({id : session},{$push : {messages : {info, recipient : capitalize(recipient), recipient_id, sender : capitalize(sender), sender_id}}})
             .then(() => Model.Message.findOne({id : session}).populate([{path : 'messages.sender_id'},{path : 'messages.recipient_id'}]))
             .then(session => {
-                console.log({session})
-                io.emit('messages', session)
+                let s = io.emit('messages', session)
+                console.log({s});
             })
             .catch(() => {
 

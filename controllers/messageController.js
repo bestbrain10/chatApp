@@ -1,10 +1,10 @@
 
-const {Message} = require('../models');
+const Model = require('../models');
 
 
 module.exports = class messageController{
     static get(req, res, next){
-        Message.find({id : req.params.session})
+        Model.Message.find({id : req.params.session})
         .populate([{path : 'messages.sender_id'},{path : 'messages.recipient_id'}])
         .then(messages => {
             res.json(messages)
@@ -13,7 +13,10 @@ module.exports = class messageController{
     }
 
     static init(req, res, next){
-        Message.create({})
+        Promise.all([
+            req.body.asA.toLowerCase() != 'vendor' ? Model.Message.findOne({'messages.sender_id' : req.body.reciever}).sort({timestamp : -1}) : Model.Message.create({}),
+            Model[req.body.asA].findOne({_id : req.body.reciever})
+        ])
         .then(message => {
             res.json(message)
         }, next)
@@ -21,7 +24,7 @@ module.exports = class messageController{
     }
 
     static create(req, res, next){
-        Message.update({
+        Model.Message.update({
             id : req.params.session
         },{
             $push : {messages : req.body}

@@ -38,7 +38,7 @@ class userClass {
             this.findOne({email})
             .select('+password')
             .then(user => {
-                if(!user || (user && !user.comparePassword(password))) return reject(user);
+                if(!user || (user && !user.comparePassword(password))) return reject(null);
                 delete user.password;
                 return resolve(Object.assign(user._doc, {token : jwt.sign({user : user._id}, secret)}));
             }, reject)
@@ -66,7 +66,10 @@ class userClass {
     }
 
     comparePassword(password){
-        return bcrypt.compareSync(password, this.password)
+
+        let $s = bcrypt.compareSync(password, this.password)
+        console.log($s, password);
+        return $s
     }
 }
 

@@ -77,7 +77,8 @@ export class UserService {
   }
 
   fetch(){
-    return fetch(this.api('vendor')).then(res => res.json())
+    let endpoint = this.session().asA.toLowerCase() == 'vendor' ? `vendor/${this.session()._id}/customers` : 'vendor';
+    return fetch(this.api(endpoint)).then(res => res.json())
   }
 
   init(){

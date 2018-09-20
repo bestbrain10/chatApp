@@ -14,10 +14,7 @@ import {NgForm} from '@angular/forms';
       <div class="col s12">
         <div class="row">
           <div class="input-field col s12">
-            <textarea id="message" name="info" ngModel ngModel class="materialize-textarea"></textarea>
-            <input type="hidden" [value]="recipient" ngModel name="recipient" />
-            <input type="hidden" [value]="recipient_id" ngModel name="recipient_id" />
-            <input type="hidden" [value]="session" ngModel name="session" />
+            <textarea id="message" name="info" ngModel ngModel class="materialize-textarea" required></textarea>
             <label for="message">Enter Message to {{reciever.fullname || 'visitor'}}</label>
           </div>
         </div>
@@ -34,9 +31,9 @@ import {NgForm} from '@angular/forms';
     </form>
   </li>
   <li class="collection-item" *ngFor="let message of messages"><div>
-    <b>{{message.sender.fullname || 'visitor'}}</b>
+    <b>{{message.sender_id.fullname || 'visitor'}}</b>
     <p>{{message.info}}</p>
-    <small>1 sec ago</small>
+    <small>{{message.timestamp | timeAgo}}</small>
   </div></li>
   </ul>
   `,
@@ -46,37 +43,48 @@ export class MessageComponent {//implements OnInit, OnDestroy{
   session: String;
   recipient : String;
   recipient_id : String;
-  reciever: Object = {ulllname : 'Vendor'};
+  reciever: Object = {fullname : 'Vendor'};
 
   constructor(
     private messageService: MessageService, 
     private userService: UserService, 
     private route: ActivatedRoute,
     private router: Router) { 
-      this.messageService.init(this.recipient_id)
+      let [id, asA] = new URL(location.href).pathname.split('/').reverse()
+      this.messageService.init(asA, id)
       .then(({session, receiver: recipient}) => {
-        console.log({session, recipient})
-        this.recipient_id = new URL(location.href).pathname.split('/')[2];
-        this.recipient = recipient.asA;
+        this.recipient = asA;
+        this.recipient_id = id;
         this.reciever = recipient;
         this.session = session.id;
-        
         return this.messageService.fetch(session.id)
       })
-      .then(messages => this.messages = messages)
+      .then(([{messages}]) => {
+        this.messages = messages.reverse()
+        this.listenForMessages()
+      })
     }
 
-    // ngOnInit() {
-    //   this.messageService
-    //       .getMessage(this.session)
-    //       .subscribe(msg => {
-    //         this.messages = msg;
-    //       });
-    // }
   
-    
+    listenForMessages(){
+      this.messageService
+      .getMessage(this.session)
+      .subscribe(msg => {
+            this.messages = msg;
+      });
+    }
+
+
   send(f : NgForm){
     //lookup user,
-    this.messageService.create(f.value)  
+    let message = Object.assign(f.value, {recipient_id : this.recipient_id, session : this.session, recipient : this.recipient});
+    let session = this.userService.session()
+    this.messageService.create(message)
+    this.messages =[Object.assign(message,{
+      sender : session.asA,
+      sender_id : session,
+      timestamp : Date.now()
+    }), ...this.messages];  
+    f.reset();
   }
 }

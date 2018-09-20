@@ -1,14 +1,35 @@
 #Chat Application
 
+## front end
 
+### Requisite
+
+- nodejs
+
+- angular (`npm i -g @angular/cli`)
+
+### Running the project
+
+`ng serve`
+ 
+Goto `http://localhost:4200/` on your browser
 
 ## Backend Server port `4000`
+
+### Requisite
+
+- nodejs
+
+- mongodb(`mongod`)
+
+
+### Running the project
 
 to run the backend server run `node index.js`
 
 ### Endpoints 
 
-### vendor
+#### vendor
 
  - *GET* /vendor
     lists all the vendors on the platform
@@ -35,7 +56,7 @@ to run the backend server run `node index.js`
     }
     ```
 
-### customer
+#### customer
 
  - *GET* /customer
     lists all the customer on the platform
@@ -62,7 +83,7 @@ to run the backend server run `node index.js`
     }
     ```
 
-### message
+#### message
 
 uses JWT to differentiate between visitor and user. if no JWT is present, a visitor is initialized
 

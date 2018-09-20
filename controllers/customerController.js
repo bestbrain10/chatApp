@@ -5,7 +5,10 @@ const {Customer} = require('../models');
 module.exports = class vendorController{
     static login(req, res, next){
         Customer.login(req.body)
-        .then(user => res.json(user), err => res.status(400).json(null))
+        .then(user => res.json(user), err => {
+            console.log({err})
+            res.status(400).json(null)
+        })
         .catch(err => {
             console.log(err)
             next(err.toString())
