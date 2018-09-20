@@ -21,10 +21,13 @@ import {NgForm} from '@angular/forms';
       </div>
     </div>
     <div class="row">
-      <div class="col s6">
+      <div class="col s3">
         <a routerLink="/users">back</a>
       </div>
-      <div class="col s6">
+      <div class="col s3">
+        <a (click)=closeSession()>close</a>
+      </div>
+      <div class="col s3">
         <button class="btn right">send</button>
       </div>
     </div>
@@ -60,7 +63,7 @@ export class MessageComponent {//implements OnInit, OnDestroy{
         return this.messageService.fetch(session.id)
       })
       .then(([{messages}]) => {
-        this.messages = messages.reverse()
+        this.messages = (messages || []).reverse()
         this.listenForMessages()
       })
     }
@@ -68,10 +71,10 @@ export class MessageComponent {//implements OnInit, OnDestroy{
   
     listenForMessages(){
       this.messageService
-      .getMessage(this.session)
-      .subscribe(msg => {
-            this.messages = msg;
-      });
+      .getMessage()
+      .on('messages', function(messages) {
+        console.log({messages})
+      }.bind(this))
     }
 
 
@@ -86,5 +89,10 @@ export class MessageComponent {//implements OnInit, OnDestroy{
       timestamp : Date.now()
     }), ...this.messages];  
     f.reset();
+  }
+
+  closeSession(){
+    this.messageService.destroy(this.recipient_id);
+    this.router.navigate(['/users']);
   }
 }

@@ -17,16 +17,12 @@ export class MessageService {
     return fetch(this.api(`message/${session}`)).then(res => res.json())
   }
 
-  getMessage(session){
+  getMessage(){
     return this.socket
-            .fromEvent<any>("messages")
-            //.pipe(filter(data => data.id == session))
-            //.pipe(map(data => data.messages));
   }
 
   create({info, recipient, recipient_id, session}){
     let {asA : sender, _id: sender_id } = this.userService.session()
-    console.log({info, recipient, recipient_id, session, sender, sender_id});
     return this.socket.emit('message', {info, recipient, recipient_id, session, sender, sender_id})
   }
 

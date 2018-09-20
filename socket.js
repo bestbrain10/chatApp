@@ -44,8 +44,7 @@ module.exports = (server) => {
             Model.Message.updateOne({id : session},{$push : {messages : {info, recipient : capitalize(recipient), recipient_id, sender : capitalize(sender), sender_id}}})
             .then(() => Model.Message.findOne({id : session}).populate([{path : 'messages.sender_id'},{path : 'messages.recipient_id'}]))
             .then(session => {
-                let s = io.emit('messages', session)
-                console.log({s});
+                client.broadcast('messages', session)
             })
             .catch(() => {
 

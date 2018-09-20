@@ -36,7 +36,7 @@ module.exports = class vendorController{
             {$replaceRoot : {newRoot : '$messages'}},  
         ])
         .then(senders => {
-            return Promise.all(senders.map(({sender, sender_id}) => Model[sender].findOne({_id : sender_id})))
+            return Promise.all(senders.filter(({sender}) => sender != 'Vendor').map(({sender, sender_id}) => Model[sender].findOne({_id : sender_id})))
         })
         .then((senders) => res.json(senders), next)
         .catch(next)
